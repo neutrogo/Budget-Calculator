@@ -26,6 +26,41 @@ ul {
     width: 100%;
 }
 
+.budget-bar {
+    height: 400px;
+    width: 80px;
+    border: 2px solid black;
+}
+
+.bar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.nav-button {
+    display: flex;
+    flex-basis: 50%;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 600;
+    background-color: orangered;
+}
+
+.nav-plus {
+    background-color: orange;
+}
+
+.remainder {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px;
+}
+
 .footer {
     display: flex;
     margin-top: auto;
@@ -35,7 +70,7 @@ ul {
     text-align: center;
 }
 
-.start {
+#start {
     height: 60px;
     width: 180px;
     background-color: orangered;
