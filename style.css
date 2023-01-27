@@ -54,7 +54,12 @@ ul {
     background-color: orange;
 }
 
-.remainder {
+.funds {
+    display: flex;
+    flex-direction: column;
+}
+
+.total, .remainder {
     font-size: 20px;
     font-weight: bold;
     text-align: center;
@@ -76,4 +81,13 @@ ul {
     background-color: orangered;
     font-size: 20px;
     font-weight: 700;
+}
+
+#testBar {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
