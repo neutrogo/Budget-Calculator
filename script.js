@@ -47,12 +47,13 @@ function createBar() {
     let bar = document.createElement('div');
     let barTitle = document.createElement('h3');
 
-    barBlock.setAttribute('id', 'testBar'); // create function that loops through bar blocks and adds new number on top
     bar.classList.add('budget-bar');
     //given barname, make it changeable
     let barName = "bar" + "-" + barCount;
     bar.setAttribute('id', barName);
     barTitle.innerText = barName;
+    barBlock.setAttribute('id', barName); // create function that loops through bar blocks and adds new number on top
+    barBlock.classList.add('bar-block');
     
     stage.appendChild(barBlock);
     barBlock.appendChild(barTitle);
@@ -81,8 +82,10 @@ function createBarNav() {
     plusButton.classList.add('nav-plus');
     minusButton.classList.add('nav-button');
     funds.classList.add('funds');
+    funds.setAttribute('id', `#bar-${currentBarNo}`);
     total.classList.add('total');
     remainder.classList.add('remainder');
+    remainder.addEventListener('input', updateValues);
 
     funds.appendChild(total);
     funds.appendChild(remainder);
@@ -99,6 +102,7 @@ function setupButtons(minus, plus, bud) {
     let remainder = document.querySelector('#testBar .remainder');
 
     currentBarNo = barCount;
+    barCount++;
     currentBarBu = bud; 
 
     minus.addEventListener('click', changeValue);
@@ -107,23 +111,40 @@ function setupButtons(minus, plus, bud) {
 
 // now needs to display actual value and allocate it to the bar
 function changeValue(e) {
-    let currentBar = document.querySelector(`#bar-${currentBarNo}`)
+    let currentBar = document.querySelector(`#bar-${currentBarNo}.budget-bar`)
     if(e.currentTarget.innerText === '+' && currentpl < 100) {
         currentpl += ((10/currentBarBu) * 100);
-        currentBar.style.background = `linear-gradient(to top, orange ${currentpl}%, orangered 0%)`;
+        updateBarValues(currentBar);
         updateRemainder(10);
     }
     if(e.currentTarget.innerText === '-' && currentpl > 0) {
         currentpl -= ((10/currentBarBu) * 100);
-        currentBar.style.background = `linear-gradient(to top, orange ${currentpl}%, orangered 0%)`;
+        updateBarValues(currentBar);
         updateRemainder(-10);
     }
 }
 
 function updateRemainder(value) {
-    let remainder = document.querySelector('#testBar .remainder');
+    //let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
+    let funds = document.querySelector(`#bar-${currentBarNo} .funds`);
+    let remainder = funds.lastChild;
     let num = +remainder.value
     remainder.value = num + value;
+}
+
+// function to readjust the bar and internal logic when total/remainder is changed
+function updateValues(e) {
+    if(e.currentTarget.classList[0] == 'remainder') {
+        let total = document.querySelector(`#bar-${currentBarNo} .total`);
+        let remainder = document.querySelector(`#bar-${currentBarNo} .remainder`);
+        currentBarBu = total.value;
+        currentpl = (remainder.value/currentBarBu) * 100;
+        updateBarValues(document.querySelector(`#bar-${currentBarNo} .budget-bar`));
+    }
+}
+
+function updateBarValues(bar) {
+    bar.style.background = `linear-gradient(to top, orange ${currentpl}%, orangered 0%)`;
 }
 
 //issue when budget is under 10

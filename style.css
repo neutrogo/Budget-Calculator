@@ -17,7 +17,7 @@ ul {
     background-color: orange;
 }
 
-.content {
+.content, .bar-block {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
