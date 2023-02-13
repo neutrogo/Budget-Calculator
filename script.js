@@ -86,6 +86,7 @@ function createBarNav() {
     total.classList.add('total');
     remainder.classList.add('remainder');
     remainder.addEventListener('input', updateValues);
+    total.addEventListener('input', updateValues);
 
     funds.appendChild(total);
     funds.appendChild(remainder);
@@ -134,13 +135,11 @@ function updateRemainder(value) {
 
 // function to readjust the bar and internal logic when total/remainder is changed
 function updateValues(e) {
-    if(e.currentTarget.classList[0] == 'remainder') {
-        let total = document.querySelector(`#bar-${currentBarNo} .total`);
-        let remainder = document.querySelector(`#bar-${currentBarNo} .remainder`);
-        currentBarBu = total.value;
-        currentpl = (remainder.value/currentBarBu) * 100;
-        updateBarValues(document.querySelector(`#bar-${currentBarNo} .budget-bar`));
-    }
+    let total = document.querySelector(`#bar-${currentBarNo} .total`);
+    let remainder = document.querySelector(`#bar-${currentBarNo} .remainder`);
+    currentBarBu = total.value;
+    currentpl = (remainder.value/currentBarBu) * 100;
+    updateBarValues(document.querySelector(`#bar-${currentBarNo} .budget-bar`));
 }
 
 function updateBarValues(bar) {
