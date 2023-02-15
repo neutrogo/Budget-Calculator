@@ -1,6 +1,6 @@
 let budget = 0;
 let barCount = 0;
-let currentpl = 100;
+let currentpl = [100];
 let currentBarNo = 0;
 let currentBarBu = 0; //has to be changed to allow for changing the budget of the bar
 let startButton = document.querySelector('#start');
@@ -17,7 +17,9 @@ function startApp() {
     let inputField = document.createElement('input');
     let inputLabel = document.createElement('label');
     let submitButton = document.createElement('button');
+    let queryField = document.createElement('div');
 
+    queryField.classList.add('query-field');
     inputField.classList.add('budget-form');
     inputField.setAttribute('type','number');
     inputField.setAttribute('name', 'budgetInput');
@@ -28,9 +30,11 @@ function startApp() {
     submitButton.innerText = "Submit";
     submitButton.setAttribute('id', 'submit-button');
     
-    stage.appendChild(inputLabel);
-    stage.appendChild(inputField);
-    stage.appendChild(submitButton);
+    queryField.appendChild(inputLabel);
+    queryField.appendChild(inputField);
+    queryField.appendChild(submitButton);
+
+    stage.appendChild(queryField);
 
     submitButton.addEventListener('click', setBudget);
 
@@ -40,6 +44,7 @@ function setBudget () {
     budget = document.querySelector('.budget-form').value;
     stage.innerHTML = '';
     createBar();
+    addNewBar();
 }
 
 function createBar() {
@@ -58,9 +63,16 @@ function createBar() {
     stage.appendChild(barBlock);
     barBlock.appendChild(barTitle);
     barBlock.appendChild(bar);
-    bar = document.querySelector('.budget-bar');
+    //bar = document.querySelector('.budget-bar');
+    //bar = document.getElementById(`#${barName}`);
+    bar = document.querySelector(`.budget-bar#${barName}`);
     bar.style.background = 'linear-gradient(to top, orange 100%, orangered 0%)';
     barBlock.appendChild(createBarNav());
+
+    if(document.contains(document.getElementById("add-bar-button"))) {
+        document.getElementById("add-bar-button").remove();
+        addNewBar();
+    }
 }
 
 function createBarNav() {
@@ -112,14 +124,16 @@ function setupButtons(minus, plus, bud) {
 
 // now needs to display actual value and allocate it to the bar
 function changeValue(e) {
-    let currentBar = document.querySelector(`#bar-${currentBarNo}.budget-bar`)
-    if(e.currentTarget.innerText === '+' && currentpl < 100) {
-        currentpl += ((10/currentBarBu) * 100);
+    //let currentBar = document.querySelector(`#bar-${currentBarNo}.budget-bar`)
+    let currentBar = document.querySelector(`.budget-bar#${e.currentTarget.parentElement.parentElement.id}`);
+    currentBarNo = e.currentTarget.parentElement.parentElement.id.slice(-1); //gets current barnumber from parents
+    if(e.currentTarget.innerText === '+' && currentpl[currentBarNo] < 100) {
+        currentpl[currentBarNo] += ((10/currentBarBu) * 100);
         updateBarValues(currentBar);
         updateRemainder(10);
     }
-    if(e.currentTarget.innerText === '-' && currentpl > 0) {
-        currentpl -= ((10/currentBarBu) * 100);
+    if(e.currentTarget.innerText === '-' && currentpl[currentBarNo] > 0) {
+        currentpl[currentBarNo] -= ((10/currentBarBu) * 100);
         updateBarValues(currentBar);
         updateRemainder(-10);
     }
@@ -135,15 +149,26 @@ function updateRemainder(value) {
 
 // function to readjust the bar and internal logic when total/remainder is changed
 function updateValues(e) {
+    currentBarNo = e.currentTarget.parentElement.parentElement.parentElement.id.slice(-1);
     let total = document.querySelector(`#bar-${currentBarNo} .total`);
     let remainder = document.querySelector(`#bar-${currentBarNo} .remainder`);
     currentBarBu = total.value;
-    currentpl = (remainder.value/currentBarBu) * 100;
+    currentpl[currentBarNo] = (remainder.value/currentBarBu) * 100;
     updateBarValues(document.querySelector(`#bar-${currentBarNo} .budget-bar`));
 }
 
 function updateBarValues(bar) {
-    bar.style.background = `linear-gradient(to top, orange ${currentpl}%, orangered 0%)`;
+    bar.style.background = `linear-gradient(to top, orange ${currentpl[currentBarNo]}%, orangered 0%)`;
+}
+
+function addNewBar() {
+    let button = document.createElement('button');
+    button.setAttribute('id', 'add-bar-button');
+    button.innerText = "+";
+    button.addEventListener('click', createBar);
+    stage.appendChild(button);
+    currentpl.push(100);
 }
 
 //issue when budget is under 10
+//update the way currentBarNo is updated too long atm
