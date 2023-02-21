@@ -88,6 +88,20 @@ ul {
     text-align: center;
 }
 
+#budget-display {
+    display: flex;
+    flex-basis: 50px;
+    align-items: center;
+    font-size: large;
+}
+
+#budget {
+    border: none;
+    background: transparent;
+    color: #000;
+    width: 100px;
+}
+
 #start {
     height: 60px;
     width: 180px;

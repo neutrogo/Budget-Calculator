@@ -45,6 +45,7 @@ function setBudget () {
     stage.innerHTML = '';
     createBar();
     addNewBar();
+    addBudgetDisplay();
 }
 
 function createBar() {
@@ -53,6 +54,7 @@ function createBar() {
     let barTitle = document.createElement('h3');
 
     bar.classList.add('budget-bar');
+    barTitle.setAttribute('contenteditable', 'true');
     //given barname, make it changeable
     let barName = "bar" + "-" + barCount;
     bar.setAttribute('id', barName);
@@ -85,9 +87,9 @@ function createBarNav() {
     
     plusButton.innerText = '+';
     minusButton.innerText = '-';
-    remainder.setAttribute('value', budget);
+    remainder.setAttribute('value', getRemainingBudget());
     remainder.setAttribute('type','number');
-    total.setAttribute('value', budget);
+    total.setAttribute('value', getRemainingBudget());
     total.setAttribute('type','number');
     barNavigation.classList.add('bar-nav');
     plusButton.classList.add('nav-button');
@@ -170,5 +172,48 @@ function addNewBar() {
     currentpl.push(100);
 }
 
+function addBudgetDisplay() {
+    let body = document.querySelector('body');
+    let displayBudget = document.createElement('input');
+    let display = document.createElement('div');
+    display.setAttribute('id', 'budget-display');
+    displayBudget.setAttribute('value', budget);
+    displayBudget.setAttribute('id', 'budget');
+    display.innerText = 'Total Budget: £';
+    display.appendChild(displayBudget);
+    body.insertBefore(display, stage);
+    displayBudget.addEventListener('input', updateBudget);
+}
+
+function updateBudget() {
+    let num = document.querySelector('#budget').value;
+    budget = +num;
+}
+
+function getRemainingBudget() {
+    leftover = getBarTotals();
+    return budget - leftover;
+}
+
+function getBarTotals() {
+    let num = 0;
+    let totals = document.getElementsByClassName('total');
+    for(let i = 0; i < totals.length; i++) {
+        num = num + +totals[i].value;
+    }
+    return num;
+}
+
+// checks that the bar totals add up to the total budget
+function checkBudgetLogic() {
+    if(num > budget) {
+        alert("You're over the budget!");
+    }
+}
+
 //issue when budget is under 10
-//update the way currentBarNo is updated too long atm
+//update the way currentBarNo is updated too long atm//let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
+
+// next: make barnames renamable (but internally still identifiable by "bar-x"), then add budget logic, ie if budget is 300 pounds, two bars totals have to add up to 300 pounds (ie 100 & 200)
+
+//optional: make currency changable
