@@ -24,6 +24,7 @@ function startApp() {
     inputField.classList.add('budget-form');
     inputField.setAttribute('type','number');
     inputField.setAttribute('name', 'budgetInput');
+    inputField.setAttribute('onkeydown', 'return event.keyCode !== 69');
     
     inputLabel.setAttribute('for', 'budgetInput');
     inputLabel.innerText = "What is your monthly budget?";
@@ -43,10 +44,15 @@ function startApp() {
 
 function setBudget () {
     budget = document.querySelector('.budget-form').value;
-    stage.innerHTML = '';
-    createBar();
-    addNewBar();
-    addBudgetDisplay();
+    if(+budget < 0) {
+        alert('Please enter a valid number');
+    }
+    else {
+        stage.innerHTML = '';
+        createBar();
+        addNewBar();
+        addBudgetDisplay();
+    }
 }
 
 function createBar() {
@@ -88,10 +94,7 @@ function createBarNav() {
     
     plusButton.innerText = '+';
     minusButton.innerText = '-';
-    remainder.setAttribute('value', getRemainingBudget());
-    remainder.setAttribute('type','number');
-    total.setAttribute('value', getRemainingBudget());
-    total.setAttribute('type','number');
+    setInputAttributes(total, remainder);
     barNavigation.classList.add('bar-nav');
     plusButton.classList.add('nav-button');
     plusButton.classList.add('nav-plus');
@@ -114,6 +117,21 @@ function createBarNav() {
     return barNavigation;
 }
 
+function setInputAttributes(total, remainder) {
+    remainder.setAttribute('value', getRemainingBudget());
+    remainder.setAttribute('type','number');
+    remainder.setAttribute('min','0');
+    remainder.setAttribute('onkeydown', 'return event.keyCode !== 69');
+    remainder.setAttribute('onkeydown', 'return event.keyCode !== 189');
+    remainder.setAttribute('onkeydown', 'return event.keyCode !== 187');
+    total.setAttribute('value', getRemainingBudget());
+    total.setAttribute('type','number');
+    total.setAttribute('min','0');
+    total.setAttribute('onkeydown', 'return event.keyCode !== 69');
+    total.setAttribute('onkeydown', 'return event.keyCode !== 189');
+    total.setAttribute('onkeydown', 'return event.keyCode !== 187');
+}
+
 function setupButtons(minus, plus, bud) {
     let remainder = document.querySelector('#testBar .remainder');
 
@@ -129,25 +147,35 @@ function setupButtons(minus, plus, bud) {
 // now needs to display actual value and allocate it to the bar
 function changeValue(e) {
     //let currentBar = document.querySelector(`#bar-${currentBarNo}.budget-bar`)
+    let operand = 10;
     let currentBar = document.querySelector(`.budget-bar#${e.currentTarget.parentElement.parentElement.id}`);
     currentBarNo = e.currentTarget.parentElement.parentElement.id.slice(-1); //gets current barnumber from parents
     if(e.currentTarget.innerText === '+' && currentpl[currentBarNo] < 100) {
         currentpl[currentBarNo] += ((10/currentBarBu) * 100);
         updateBarValues(currentBar);
-        updateRemainder(10);
+        updateRemainder(operand);
     }
     if(e.currentTarget.innerText === '-' && currentpl[currentBarNo] > 0) {
         currentpl[currentBarNo] -= ((10/currentBarBu) * 100);
         updateBarValues(currentBar);
-        updateRemainder(-10);
+        updateRemainder(-operand);
     }
 }
 
 function updateRemainder(value) {
     //let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
     let funds = document.querySelector(`#bar-${currentBarNo} .funds`);
-    let remainder = funds.lastChild;
-    let num = +remainder.value
+    let remainder = funds.firstChild;
+    let total = funds.lastChild;
+    let num = +remainder.value;
+    let tot = +total.value;
+
+    if(value < 0 && num < Math.abs(value)) {
+        value = -num;
+    }
+    if(value > 0 && num + value > tot) {
+        value = tot - num;
+    }
     remainder.value = num + value;
 }
 
@@ -190,6 +218,8 @@ function addBudgetDisplay() {
     display.setAttribute('id', 'budget-display');
     displayBudget.setAttribute('value', budget);
     displayBudget.setAttribute('id', 'budget');
+    displayBudget.setAttribute('onkeydown', 'return event.keyCode !== 189');
+    displayBudget.setAttribute('onkeydown', 'return event.keyCode !== 187');
     display.innerText = 'Total Budget: £';
     display.appendChild(displayBudget);
     body.insertBefore(display, stage);
@@ -232,6 +262,4 @@ function checkBudgetLogic(total, remainder) {
 
 //update the way currentBarNo is updated too long atm//let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
 
-// next: don't allow for negative values (yet) make sure newly created bars dont have negative values
-
-//optional: make currency changable + potentially make every total, remainder etc part of a "bar" object
+//optional: make currency changable + potentially make every total, remainder etc part of a "bar" object + make sub & add button operand changeable + don't allow for empty input when setting budget
