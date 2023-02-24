@@ -2,7 +2,8 @@ let budget = 0;
 let barCount = 0;
 let currentpl = [100];
 let currentBarNo = 0;
-let currentBarBu = 0; //has to be changed to allow for changing the budget of the bar
+let currentBarBu = 0;
+let currentBarRem = 0;
 let startButton = document.querySelector('#start');
 let stage = document.querySelector('.content');
 
@@ -102,8 +103,8 @@ function createBarNav() {
     remainder.addEventListener('input', updateValues);
     total.addEventListener('input', updateValues);
 
-    funds.appendChild(total);
     funds.appendChild(remainder);
+    funds.appendChild(total);
     barNavigation.appendChild(plusButton);
     barNavigation.appendChild(minusButton);
     barNavigation.appendChild(funds);
@@ -118,7 +119,8 @@ function setupButtons(minus, plus, bud) {
 
     currentBarNo = barCount;
     barCount++;
-    currentBarBu = bud; 
+    currentBarBu = bud;
+    currentBarRem = bud;
 
     minus.addEventListener('click', changeValue);
     plus.addEventListener('click', changeValue);
@@ -151,12 +153,21 @@ function updateRemainder(value) {
 
 // function to readjust the bar and internal logic when total/remainder is changed
 function updateValues(e) {
-    currentBarNo = e.currentTarget.parentElement.parentElement.parentElement.id.slice(-1);
     let total = document.querySelector(`#bar-${currentBarNo} .total`);
     let remainder = document.querySelector(`#bar-${currentBarNo} .remainder`);
-    currentBarBu = total.value;
-    currentpl[currentBarNo] = (remainder.value/currentBarBu) * 100;
-    updateBarValues(document.querySelector(`#bar-${currentBarNo} .budget-bar`));
+    let rem = +remainder.value;
+
+    if(checkBudgetLogic(getBarTotals(), rem)) {
+        currentBarNo = e.currentTarget.parentElement.parentElement.parentElement.id.slice(-1);
+        currentBarBu = total.value;
+        currentBarRem = remainder.value;
+        currentpl[currentBarNo] = (remainder.value/currentBarBu) * 100;
+        updateBarValues(document.querySelector(`#bar-${currentBarNo} .budget-bar`));
+    }
+    else {
+        total.value = currentBarBu;
+        remainder.value = currentBarRem;
+    }
 }
 
 function updateBarValues(bar) {
@@ -205,15 +216,23 @@ function getBarTotals() {
 }
 
 // checks that the bar totals add up to the total budget
-function checkBudgetLogic() {
-    if(num > budget) {
+function checkBudgetLogic(total, remainder) {
+    if(total > budget) {
         alert("You're over the budget!");
+        return false;
+    }
+    if(remainder > total) {
+        alert("The remainder is higher than the total!");
+        return false;
+    }
+    else {
+        return true;
     }
 }
 
 //issue when budget is under 10
 //update the way currentBarNo is updated too long atm//let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
 
-// next: make barnames renamable (but internally still identifiable by "bar-x"), then add budget logic, ie if budget is 300 pounds, two bars totals have to add up to 300 pounds (ie 100 & 200)
+// next: add checkBudgetLogic to updatevalues, make sure the values DONT update if the totals are over the budget
 
-//optional: make currency changable
+//optional: make currency changable + potentially make every total, remainder etc part of a "bar" object
