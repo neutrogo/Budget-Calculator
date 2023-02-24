@@ -230,9 +230,8 @@ function checkBudgetLogic(total, remainder) {
     }
 }
 
-//issue when budget is under 10
 //update the way currentBarNo is updated too long atm//let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
 
-// next: add checkBudgetLogic to updatevalues, make sure the values DONT update if the totals are over the budget
+// next: don't allow for negative values (yet) make sure newly created bars dont have negative values
 
 //optional: make currency changable + potentially make every total, remainder etc part of a "bar" object
