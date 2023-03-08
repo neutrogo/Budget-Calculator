@@ -263,3 +263,4 @@ function checkBudgetLogic(total, remainder) {
 //update the way currentBarNo is updated too long atm//let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
 
 //optional: make currency changable + potentially make every total, remainder etc part of a "bar" object + make sub & add button operand changeable + don't allow for empty input when setting budget
+
