@@ -7,7 +7,7 @@ let currentBarRem = 0;
 let startButton = document.querySelector('#start');
 let stage = document.querySelector('.content');
 
-
+setUpSettings()
 startButton.addEventListener('click', startApp);
 
 //Potentially rename to 'initialise'
@@ -259,6 +259,34 @@ function checkBudgetLogic(total, remainder) {
         return true;
     }
 }
+
+
+// Settings Functions:
+
+function setUpSettings() {
+    settings = document.querySelector('#settings');
+    settings.addEventListener("click", openSettings);
+}
+
+function openSettings() {
+    let blur = document.createElement('div')
+    let menu = document.createElement('div');
+    let increment = document.createElement('div');
+    let description = document.createElement('p');
+    let value = document.createElement('input');
+    description.innerText = "+/- increment"
+    value.setAttribute('type', 'number');
+    value.setAttribute('min', 0);
+    increment.appendChild(description);
+    increment.appendChild(value)
+    menu.setAttribute('id', 'menu-box');
+    menu.appendChild(increment);
+    blur.setAttribute('id','blur-screen')
+
+    document.body.appendChild(blur)
+    document.body.appendChild(menu)
+}
+
 
 //update the way currentBarNo is updated too long atm//let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
 
