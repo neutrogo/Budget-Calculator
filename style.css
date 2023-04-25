@@ -158,6 +158,10 @@ ul {
     background-color: #611818;
 }
 
+#inc-settings {
+    margin-left: auto;
+}
+
 #blur-screen {
     height: 100%;
     width: 100%;
@@ -165,4 +169,11 @@ ul {
     filter: blur(400px);
     position: absolute;
     z-index: 2;
+}
+
+#close-settings {
+    height: 20px;
+    width: 20px;
+    align-self: flex-start;
+    margin-left: auto;
 }

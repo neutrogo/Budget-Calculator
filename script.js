@@ -4,6 +4,7 @@ let currentpl = [100];
 let currentBarNo = 0;
 let currentBarBu = 0;
 let currentBarRem = 0;
+let increment = 10;
 let startButton = document.querySelector('#start');
 let stage = document.querySelector('.content');
 
@@ -147,7 +148,7 @@ function setupButtons(minus, plus, bud) {
 // now needs to display actual value and allocate it to the bar
 function changeValue(e) {
     //let currentBar = document.querySelector(`#bar-${currentBarNo}.budget-bar`)
-    let operand = 10;
+    let operand = increment;
     let currentBar = document.querySelector(`.budget-bar#${e.currentTarget.parentElement.parentElement.id}`);
     currentBarNo = e.currentTarget.parentElement.parentElement.id.slice(-1); //gets current barnumber from parents
     if(e.currentTarget.innerText === '+' && currentpl[currentBarNo] < 100) {
@@ -269,22 +270,41 @@ function setUpSettings() {
 }
 
 function openSettings() {
-    let blur = document.createElement('div')
+    let blur = document.createElement('div');
     let menu = document.createElement('div');
+    let closeButton = document.createElement('button');
     let increment = document.createElement('div');
     let description = document.createElement('p');
     let value = document.createElement('input');
     description.innerText = "+/- increment"
     value.setAttribute('type', 'number');
     value.setAttribute('min', 0);
+    value.setAttribute('id', 'increment');
+    value.addEventListener('input', changeIncrement);
     increment.appendChild(description);
-    increment.appendChild(value)
+    increment.appendChild(value);
+    increment.setAttribute('id', 'inc-settings')
+    closeButton.setAttribute('id', 'close-settings');
+    closeButton.addEventListener('click', removeSettings);
     menu.setAttribute('id', 'menu-box');
     menu.appendChild(increment);
-    blur.setAttribute('id','blur-screen')
+    menu.appendChild(closeButton);
+    blur.setAttribute('id','blur-screen');
 
-    document.body.appendChild(blur)
-    document.body.appendChild(menu)
+    document.body.appendChild(blur);
+    document.body.appendChild(menu);
+}
+
+function removeSettings() {
+    let settings = document.getElementById('menu-box');
+    let blur = document.getElementById('blur-screen');
+    settings.remove();
+    blur.remove();
+}
+
+function changeIncrement() {
+    let value = document.querySelector('#increment');
+    increment = value.value;
 }
 
 
