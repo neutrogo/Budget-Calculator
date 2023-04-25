@@ -152,12 +152,12 @@ function changeValue(e) {
     let currentBar = document.querySelector(`.budget-bar#${e.currentTarget.parentElement.parentElement.id}`);
     currentBarNo = e.currentTarget.parentElement.parentElement.id.slice(-1); //gets current barnumber from parents
     if(e.currentTarget.innerText === '+' && currentpl[currentBarNo] < 100) {
-        currentpl[currentBarNo] += ((10/currentBarBu) * 100);
+        currentpl[currentBarNo] += ((operand/currentBarBu) * 100);
         updateBarValues(currentBar);
         updateRemainder(operand);
     }
     if(e.currentTarget.innerText === '-' && currentpl[currentBarNo] > 0) {
-        currentpl[currentBarNo] -= ((10/currentBarBu) * 100);
+        currentpl[currentBarNo] -= ((operand/currentBarBu) * 100);
         updateBarValues(currentBar);
         updateRemainder(-operand);
     }
@@ -171,13 +171,13 @@ function updateRemainder(value) {
     let num = +remainder.value;
     let tot = +total.value;
 
-    if(value < 0 && num < Math.abs(value)) {
+    if(+value < 0 && num < Math.abs(+value)) {
         value = -num;
     }
-    if(value > 0 && num + value > tot) {
+    if(+value > 0 && num + +value > tot) {
         value = tot - num;
     }
-    remainder.value = num + value;
+    remainder.value = num + +value;
 }
 
 // function to readjust the bar and internal logic when total/remainder is changed
