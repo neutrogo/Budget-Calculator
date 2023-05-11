@@ -63,18 +63,15 @@ function createBar() {
 
     bar.classList.add('budget-bar');
     barTitle.setAttribute('contenteditable', 'true');
-    //given barname, make it changeable
     let barName = "bar" + "-" + barCount;
     bar.setAttribute('id', barName);
     barTitle.innerText = barName;
-    barBlock.setAttribute('id', barName); // create function that loops through bar blocks and adds new number on top
+    barBlock.setAttribute('id', barName);
     barBlock.classList.add('bar-block');
     
     stage.appendChild(barBlock);
     barBlock.appendChild(barTitle);
     barBlock.appendChild(bar);
-    //bar = document.querySelector('.budget-bar');
-    //bar = document.getElementById(`#${barName}`);
     bar = document.querySelector(`.budget-bar#${barName}`);
     bar.style.background = 'linear-gradient(to top, orange 100%, orangered 0%)';
     barBlock.appendChild(createBarNav());
@@ -145,17 +142,11 @@ function setupButtons(minus, plus, bud) {
     plus.addEventListener('click', changeValue);
 }
 
-// now needs to display actual value and allocate it to the bar
 function changeValue(e) {
-    //let currentBar = document.querySelector(`#bar-${currentBarNo}.budget-bar`)
     let operand = increment;
     let currentBar = document.querySelector(`.budget-bar#${e.currentTarget.parentElement.parentElement.id}`);
-    // "the current" line below is used mulitple times, create seperate function?
     currentBarNo = e.currentTarget.parentElement.parentElement.id.slice(-1); //gets current barnumber from parents
-    let total = document.querySelector(`#bar-${currentBarNo} .total`);
-    let remainder = document.querySelector(`#bar-${currentBarNo} .remainder`);
-    currentBarBu = total.value;
-    currentBarRem = remainder.value;
+    setCurrentValues();
     if(e.currentTarget.innerText === '+' && currentpl[currentBarNo] < 100) {
         currentpl[currentBarNo] += ((operand/currentBarBu) * 100);
         updateBarValues(currentBar);
@@ -168,8 +159,15 @@ function changeValue(e) {
     }
 }
 
+//might as well be turned into its own object
+function setCurrentValues() {
+    let total = document.querySelector(`#bar-${currentBarNo} .total`);
+    let remainder = document.querySelector(`#bar-${currentBarNo} .remainder`);
+    currentBarBu = total.value;
+    currentBarRem = remainder.value;    
+}
+
 function updateRemainder(value) {
-    //let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
     let funds = document.querySelector(`#bar-${currentBarNo} .funds`);
     let remainder = funds.firstChild;
     let total = funds.lastChild;
@@ -187,14 +185,11 @@ function updateRemainder(value) {
 
 // function to readjust the bar and internal logic when total/remainder is changed
 function updateValues(e) {
-    let total = document.querySelector(`#bar-${currentBarNo} .total`);
     let remainder = document.querySelector(`#bar-${currentBarNo} .remainder`);
-    let rem = +remainder.value;
 
-    if(checkBudgetLogic(getBarTotals(), rem)) {
+    if(checkBudgetLogic(getBarTotals(), +remainder.value)) {
         currentBarNo = e.currentTarget.parentElement.parentElement.parentElement.id.slice(-1);
-        currentBarBu = total.value;
-        currentBarRem = remainder.value;
+        setCurrentValues()
         currentpl[currentBarNo] = (remainder.value/currentBarBu) * 100;
         updateBarValues(document.querySelector(`#bar-${currentBarNo} .budget-bar`));
     }
