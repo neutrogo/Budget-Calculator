@@ -150,7 +150,12 @@ function changeValue(e) {
     //let currentBar = document.querySelector(`#bar-${currentBarNo}.budget-bar`)
     let operand = increment;
     let currentBar = document.querySelector(`.budget-bar#${e.currentTarget.parentElement.parentElement.id}`);
+    // "the current" line below is used mulitple times, create seperate function?
     currentBarNo = e.currentTarget.parentElement.parentElement.id.slice(-1); //gets current barnumber from parents
+    let total = document.querySelector(`#bar-${currentBarNo} .total`);
+    let remainder = document.querySelector(`#bar-${currentBarNo} .remainder`);
+    currentBarBu = total.value;
+    currentBarRem = remainder.value;
     if(e.currentTarget.innerText === '+' && currentpl[currentBarNo] < 100) {
         currentpl[currentBarNo] += ((operand/currentBarBu) * 100);
         updateBarValues(currentBar);
@@ -311,4 +316,3 @@ function changeIncrement() {
 //update the way currentBarNo is updated too long atm//let remainder = bar.closest(`#bar-${currentBarNo} .bar-block`).;
 
 //optional: make currency changable + potentially make every total, remainder etc part of a "bar" object + make sub & add button operand changeable + don't allow for empty input when setting budget
-
