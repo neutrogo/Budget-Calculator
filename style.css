@@ -177,3 +177,7 @@ ul {
     align-self: flex-start;
     margin-left: auto;
 }
+
+#increment-text {
+    color: white;
+}

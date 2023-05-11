@@ -189,7 +189,7 @@ function updateValues(e) {
 
     if(checkBudgetLogic(getBarTotals(), +remainder.value)) {
         currentBarNo = e.currentTarget.parentElement.parentElement.parentElement.id.slice(-1);
-        setCurrentValues()
+        setCurrentValues();
         currentpl[currentBarNo] = (remainder.value/currentBarBu) * 100;
         updateBarValues(document.querySelector(`#bar-${currentBarNo} .budget-bar`));
     }
@@ -276,10 +276,12 @@ function openSettings() {
     let increment = document.createElement('div');
     let description = document.createElement('p');
     let value = document.createElement('input');
-    description.innerText = "+/- increment"
+    description.innerText = "+/- increment";
+    description.setAttribute('id', "increment-text");
     value.setAttribute('type', 'number');
     value.setAttribute('min', 0);
     value.setAttribute('id', 'increment');
+    value.setAttribute('value', 10);
     value.addEventListener('input', changeIncrement);
     increment.appendChild(description);
     increment.appendChild(value);
